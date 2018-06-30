@@ -9,7 +9,7 @@ from transaction import Transaction
 from keys import getEncodedKeys
 
 Config = configparser.ConfigParser()
-Config.read("config.ini")
+Config.read(".env")
 
 app = Flask(__name__)
 client = MongoClient(Config["MongoDB"]["url"],
@@ -140,4 +140,4 @@ def getTransactions():
     return jsonify(transactions)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=True)
