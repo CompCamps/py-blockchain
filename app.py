@@ -2,20 +2,20 @@ import hashlib as hasher
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import simplejson as json
-import configparser
+import os
 
 from block import *
 from transaction import Transaction
 from keys import getEncodedKeys
 
-Config = configparser.ConfigParser()
-Config.read(".env")
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
-client = MongoClient(Config["MongoDB"]["url"],
-                      username=Config["MongoDB"]["username"],
-                      password=Config["MongoDB"]["password"],
-                      authSource=Config["MongoDB"]["authsource"],
+client = MongoClient(os.getenv("MONGO_URL"),
+                      username=os.getenv("MONGO_USERNAME"),
+                      password=os.getenv("MONGO_PASSWORD"),
+                      authSource=os.getenv("MONGO_AUTHSOURCE"),
                       authMechanism='SCRAM-SHA-1')
 
 transactions = []

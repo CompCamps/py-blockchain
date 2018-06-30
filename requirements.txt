@@ -1,6 +1,6 @@
 simplejson
 ecdsa
 flask
-configparser
+python-dotenv
 pymongo
 requests
