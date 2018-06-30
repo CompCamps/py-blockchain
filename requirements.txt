@@ -1,0 +1,6 @@
+simplejson
+ecdsa
+flask
+configparser
+pymongo
+requests
