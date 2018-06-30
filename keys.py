@@ -15,9 +15,22 @@ def generateKeys():
     print(base64.b64encode(private_key.to_string()))
     print(str(base64.b64encode(public_key.to_string()), "utf-8"))
 
+def genPubKey():
+    private_key = SigningKey.generate(curve=SECP256k1) 
+    public_key = private_key.get_verifying_key()
+
+    print(str(base64.b64encode(public_key.to_string()), "utf-8"))
+
 def getKeys():
-    public_key = VerifyingKey.from_pem(open("public.pem").read())
-    private_key = SigningKey.from_pem(open("private.pem").read())
+    public_key = {}
+    private_key = {}
+    try:
+        public_key = VerifyingKey.from_pem(open("public.pem").read())
+        private_key = SigningKey.from_pem(open("private.pem").read())
+    except:
+        generateKeys()
+        public_key = VerifyingKey.from_pem(open("public.pem").read())
+        private_key = SigningKey.from_pem(open("private.pem").read())
     return public_key, private_key
 
 def getEncodedKeys():
@@ -41,5 +54,6 @@ def verifyData(data, public_key_string, signature):
     except BadSignatureError:
         return False
 
+#genPubKey()
 # sig = signData("test")
 # print(verifyData("test", "/pJ+3b4y3iOwIF+bTqQQT78xeuvoJxSUb3QmHNkpGP61ZbBXjq0cFclTqPI5pevQSniw/1Yz+snqDBCkPbWPRw==", sig))
