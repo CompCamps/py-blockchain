@@ -1,40 +1,53 @@
-import hashlib as hasher
+import hashlib as hashlib
 import datetime as date
 
 # Block object
 class Block:
     # Constructor
-    def __init__(self, index, timestamp, data, nonce, previous_hash):
+    def __init__(self, index, transactions, nonce, previousHash, hash=None):
         self.index = index
-        self.timestamp = timestamp
-        self.data = data
+        self.transactions = transactions
         self.nonce = nonce
-        self.previous_hash = previous_hash
-        self.hash = self.hash_block()
+        self.previousHash = previousHash
+        if hash:
+            self.hash = hash
+        else:
+            self.hash = self.hashBlock()
+
+    def _asdict(self):
+        return self.__dict__
   
     # Generate the hash for the new block
-    def hash_block(self):
-        sha = hasher.sha256()
-        sha.update(str(self.index) + 
-                str(self.timestamp) + 
-                str(self.data) + 
+    def hashBlock(self):
+        hash = hashlib.sha256((
+                str(self.transactions) + 
                 str(self.nonce) +
-                str(self.previous_hash))
-        return sha.hexdigest()
+                str(self.previousHash)).encode('utf-8'))
+        return hash.hexdigest()
 
     # Prints out information about the block
     def display(self):
-        print "Block #: " + str(self.index)
-        print "Data: " + self.data
-        print "Hash: " + self.hash
-        print "Previous Hash: " + self.previous_hash
+        print("Block #: " + str(self.index))
+        print("transactions: " + self.transactions)
+        print("Nonce: " + str(self.nonce))
+        print("Hash: " + self.hash)
+        print("Previous Hash: " + self.previousHash)
+        print("")
+    
+    def validate(self):
+        if (self.hash != self.hashBlock()):
+            return False
+        if (self.hash[:4] != "0000"):
+             return False
+        # if (self.hash[:5] != "decaf"):
+        #     return False
+        return True
 
 # Creates the first block with arbitrary hash
 def createGenesisBlock():
-  return Block(0, date.datetime.now(), "Genesis Block", 0, "0")
+  return Block(0, "[]", 0, "0")
 
-def nextBlock(lastBlock, data, nonce):
+def nextBlock(lastBlock, transactions, nonce):
     index = lastBlock.index + 1
-    timestamp = date.datetime.now()
     hash = lastBlock.hash
-    return Block(index, timestamp, data, nonce, hash)
+    return Block(index, transactions, nonce, hash)
