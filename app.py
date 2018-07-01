@@ -77,7 +77,7 @@ def balance():
 @app.route('/api/chain')
 def chain():
     blockchain = getBlockchain
-    return jsonify(getBlockchain)
+    return jsonify(blockchain)
 
 @app.route("/api/current")
 def current():
