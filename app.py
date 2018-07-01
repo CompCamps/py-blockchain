@@ -1,5 +1,5 @@
 import hashlib as hasher
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from pymongo import MongoClient
 import simplejson as json
 import os
@@ -11,7 +11,8 @@ from keys import getEncodedKeys
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-app = Flask(__name__)
+template_dir = os.path.abspath('./frontend')
+app = Flask(__name__, template_folder=template_dir)
 client = MongoClient(os.getenv("MONGO_URL"),
                       username=os.getenv("MONGO_USERNAME"),
                       password=os.getenv("MONGO_PASSWORD"),
@@ -28,11 +29,6 @@ for block in blocks:
 
 #db.blocks.insert_one(createGenesisBlock().__dict__)
 previousBlock = blockchain[-1]
-
-# make transaction endpoint to get pending transctions
-# endpoint to post new transaction
-# verify new transactions on post
-# verify transactions included with mined block
 
 def getBalance(public_key):
     balance = 0
@@ -62,22 +58,26 @@ def hasSufficentFunds(public_key, amount):
         return True
     return False
 
-@app.route('/balance', methods=["POST"])
+@app.route('/')
+def frontend():
+    return render_template("index.html")
+
+@app.route('/api/balance', methods=["POST"])
 def balance():
     req = request.get_json()
     return str(getBalance(req["public_key"]))
 
-@app.route('/chain')
+@app.route('/api/chain')
 def chain():
     global blockchain
     return jsonify(blockchain)
 
-@app.route("/current")
+@app.route("/api/current")
 def current():
     global previousBlock
     return jsonify(previousBlock)
 
-@app.route("/mine", methods=['POST'])
+@app.route("/api/mine", methods=['POST'])
 def mine():
     global previousBlock
     global db
@@ -122,7 +122,7 @@ def mine():
     print("")
     return jsonify({"message": "New block successfully mined!"}), 200
 
-@app.route("/transactions", methods=['POST'])
+@app.route("/api/transactions", methods=['POST'])
 def createTransaction():
     req = request.get_json()
     transactionObject = Transaction(req["sender"], req["reciever"], req["amount"], req["signature"])
@@ -135,7 +135,7 @@ def createTransaction():
     transactions.append(transactionObject)
     return jsonify({"response": "Transaction Posted"})
 
-@app.route("/transactions", methods=['GET'])
+@app.route("/api/transactions", methods=['GET'])
 def getTransactions():
     return jsonify(transactions)
 
