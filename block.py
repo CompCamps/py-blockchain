@@ -49,5 +49,4 @@ def createGenesisBlock():
 
 def nextBlock(lastBlock, transactions, nonce):
     index = lastBlock.index + 1
-    hash = lastBlock.hash
-    return Block(index, transactions, nonce, hash)
+    return Block(index, transactions, nonce, lastBlock.hash)

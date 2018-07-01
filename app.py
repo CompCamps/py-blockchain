@@ -18,19 +18,23 @@ client = MongoClient(os.getenv("MONGO_URL"),
                       authSource=os.getenv("MONGO_AUTHSOURCE"),
                       authMechanism='SCRAM-SHA-1')
 
-transactions = []
-blockchain = []
 db = client.campcoin
-blocks = db.blocks.find()
-for block in blocks:
-    b = Block(block['index'], block['transactions'], block['nonce'], block['hash'])
-    blockchain.append(b)
+
+def getBlockchain():
+    blockchain = []
+    blocks = db.blocks.find()
+    for block in blocks:
+        b = Block(block['index'], block['transactions'], block['nonce'], block['hash'])
+        blockchain.append(b)
+    return blockchain
+
+transactions = [] #todo transactions in mongo
 
 #db.blocks.insert_one(createGenesisBlock().__dict__)
-previousBlock = blockchain[-1]
 
 def getBalance(public_key):
     balance = 0
+    blockchain = getBlockchain()
     for block in blockchain:
         for transaction in json.loads(block.transactions):
             if (transaction["reciever"] == public_key):
@@ -72,13 +76,13 @@ def balance():
 
 @app.route('/api/chain')
 def chain():
-    global blockchain
-    return jsonify(blockchain)
+    blockchain = getBlockchain
+    return jsonify(getBlockchain)
 
 @app.route("/api/current")
 def current():
-    global previousBlock
-    return jsonify(previousBlock)
+    blockchain = getBlockchain()
+    return jsonify(blockchain[-1])
 
 @app.route("/api/mine", methods=['POST'])
 def mine():
@@ -114,8 +118,6 @@ def mine():
     
     insertBlock = Block(block.index, block.transactions, block.nonce, block.previousHash, block.hash)
     db.blocks.insert_one(insertBlock.__dict__)
-    blockchain.append(block)
-    previousBlock = block
 
     print("--New block successfully mined!--")
     print("Transactions:")

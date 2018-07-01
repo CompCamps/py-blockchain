@@ -9,7 +9,7 @@ import os
 import time
 
 public_key, _ = getEncodedKeys()
-server = "http://localhost:5000"
+server = "https://campcoin.herokuapp.com"
 
 def mineCycle():
     try:
@@ -58,7 +58,7 @@ def getCurrentTransactions():
     transactions.append(transaction)
     return transactions
 
-def submitNewBlock(newBlock):
+def submitNewBlock(newBlock): 
     req = requests.post(server + '/api/mine', json=newBlock)
     if req.status_code == 200:
         print("**Successfully mined block!**")
