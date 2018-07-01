@@ -1,4 +1,4 @@
-from keys import signData, verifyData
+from lib.keys import signData, verifyData
 import base64
 
 class Transaction:

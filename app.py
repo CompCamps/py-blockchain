@@ -1,18 +1,17 @@
 import hashlib as hasher
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from pymongo import MongoClient
 import simplejson as json
-import os
 
 from block import *
 from transaction import Transaction
-from keys import getEncodedKeys
 
+import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 template_dir = os.path.abspath('./frontend')
-app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__, template_folder=template_dir, static_url_path=template_dir)
 client = MongoClient(os.getenv("MONGO_URL"),
                       username=os.getenv("MONGO_USERNAME"),
                       password=os.getenv("MONGO_PASSWORD"),
@@ -62,6 +61,10 @@ def hasSufficentFunds(public_key, amount):
 def frontend():
     return render_template("index.html")
 
+@app.route('/<path:path>')
+def send_js(path):
+    return send_from_directory('frontend', path)
+
 @app.route('/api/balance', methods=["POST"])
 def balance():
     req = request.get_json()
@@ -109,7 +112,7 @@ def mine():
 
         transactionStringArr.append(str(transactionObject.amount) + " coin(s) " + transactionObject.sender + " --> " + transactionObject.reciever)
     
-    insertBlock = Block(block.index, block.transactions, block.nonce, block.hash)
+    insertBlock = Block(block.index, block.transactions, block.nonce, block.previousHash, block.hash)
     db.blocks.insert_one(insertBlock.__dict__)
     blockchain.append(block)
     previousBlock = block
