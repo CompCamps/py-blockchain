@@ -24,7 +24,7 @@ def getBlockchain():
     blockchain = []
     blocks = db.blocks.find()
     for block in blocks:
-        b = Block(block['index'], block['transactions'], block['nonce'], block['hash'])
+        b = Block(block['index'], block['transactions'], block['nonce'], block['previousHash'], block['hash'])
         blockchain.append(b)
     return blockchain
 
