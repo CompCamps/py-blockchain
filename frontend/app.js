@@ -18,6 +18,7 @@ class Block extends React.Component {
         <div class="card block">
           <div class="card-header">
             <h5 class="card-title">Block #: {this.props.block.index}</h5>
+            Nonce: <span class="hash">{this.props.block.nonce}</span><br/>
             Hash: <span class="hash">{this.props.block.hash}</span>
           </div>
           <div class="card-body transactions">
