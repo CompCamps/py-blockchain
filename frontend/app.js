@@ -54,7 +54,9 @@ class BlockChain extends React.Component {
 render() { 
     return (
     <div class="row">
-      {this.state.blocks.reverse().map(block=> <Block block={block} transactions={JSON.parse(block.transactions)}></Block>)}
+      {this.state.blocks.length == 0 ? 
+      <div class="loader"></div> :
+      this.state.blocks.reverse().map(block=> <Block block={block} transactions={JSON.parse(block.transactions)}></Block>)}
     </div>
   );
   } 

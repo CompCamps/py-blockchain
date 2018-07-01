@@ -86,8 +86,9 @@ def current():
 
 @app.route("/api/mine", methods=['POST'])
 def mine():
-    global previousBlock
     global db
+
+    previousBlock = getBlockchain()[-1]
 
     req = request.get_json()
     block = Block(req["index"], req["transactions"], req["nonce"], previousBlock.hash, req["hash"])
