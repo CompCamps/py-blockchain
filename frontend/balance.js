@@ -1,4 +1,49 @@
-// Create a ES6 class component   
+class BalanceList extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      balances: [],
+      loading: false
+    }
+  }
+
+  sort(a, b) {
+    return a.balance - b.balance;
+  }
+
+  componentDidMount() {
+    this.setState({loading: true});
+    fetch('/api/balances')
+    .then(response => {
+      return response.json();
+    })
+    .then(myJson => {
+      this.setState((prevState, props) => {
+        var balances = []
+        Object.keys(myJson).forEach(function (key, value) {
+          balances.push({key: key, balance: myJson[key]})
+        });
+        return {balances: balances.sort(this.sort).reverse(), loading: false};
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div class="row">
+        {this.state.loading ? 
+          <div class="loader"></div> :
+          <ul class="list-group col-8 offset-2">
+          {this.state.balances.map(function(bal) {  
+            return (<li class="list-group-item"><span class="hash">{bal.key}</span> <span class="balance right text-info">¢{bal.balance}</span></li>)
+          })}
+          </ul>
+        }
+      </div>
+      
+    )
+  }
+}
 class Balance extends React.Component { 
   constructor() {
     super()
@@ -21,7 +66,6 @@ class Balance extends React.Component {
       return response.json();
     })
     .then(myJson => {
-      console.log(myJson)
       this.setState((prevState, props) => {
         return {balance: myJson, loading: false};
       });
@@ -33,7 +77,7 @@ render() {
     <div class="row">
       {this.state.loading ? 
       <div class="loader"></div> : ''}
-      <div class="col-6 offset-3">
+      <div class="col-8 offset-2">
         <div class="form-group">
           <label for="publicKey">Public Key</label>
           <input class="form-control" id="publicKey" type="text" value={this.state.publicKey} onChange={this.handleChange.bind(this)}/>
@@ -43,9 +87,12 @@ render() {
         </div>
       </div>
       
-      <div class="col-6 offset-3">
-      <hr/>
+      <div class="col-8 offset-2">
       <h3>Balance: {this.state.balance}</h3>
+      <hr class="mb-4"/>
+      <div class="text-center">
+        <h4>All Wallets</h4>
+      </div>
       </div>
     </div>
   );
@@ -57,6 +104,7 @@ function App() {
   return(
   <div class="container-fluid">
     <Balance />
+    <BalanceList />
   </div>
   )
 }

@@ -167,6 +167,26 @@ def getTransactions():
     transactions = findTransactions()
     return jsonify(transactions)
 
+@app.route('/api/balances')
+def getAllBalances():
+    balances = {}
+    blockchain = getBlockchain()
+    for block in blockchain:
+        for transaction in json.loads(block.transactions):
+            try:
+                balances[transaction["reciever"]] = balances[transaction["reciever"]] + transaction["amount"]
+            except:
+                balances[transaction["reciever"]] = transaction["amount"]
+
+            try:
+                balances[transaction["sender"]] = balances[transaction["sender"]] - transaction["amount"]
+            except:
+                balances[transaction["sender"]] = 0 - transaction["amount"]
+
+    del balances["MINER"]
+    del balances["123"] # test key
+    return jsonify(balances)
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
