@@ -1,6 +1,6 @@
 import requests
 
-server = "http://localhost:5000"#https://campcoin.herokuapp.com" 
+server = "https://campcoin.herokuapp.com" 
 
 class Prefix:
     def __init__(self):
