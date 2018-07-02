@@ -20,6 +20,9 @@ client = MongoClient(os.getenv("MONGO_URL"),
 
 db = client.campcoin
 
+#genesis block
+#db.blocks.insert_one(createGenesisBlock().__dict__)
+
 def getBlockchain():
     blockchain = []
     blocks = db.blocks.find()
@@ -27,10 +30,13 @@ def getBlockchain():
         b = Block(block['index'], block['transactions'], block['nonce'], block['previousHash'], block['hash'])
         blockchain.append(b)
     return blockchain
-
-transactions = [] #todo transactions in mongo
-
-#db.blocks.insert_one(createGenesisBlock().__dict__)
+    
+def findTransactions():
+    transactions = []
+    for transaction in db.transactions.find():
+        t = Transaction(transaction['sender'], transaction['reciever'], transaction['amount'], transaction['signature'])
+        transactions.append(t)
+    return transactions
 
 def getBalance(public_key):
     balance = 0
@@ -46,6 +52,7 @@ def getBalance(public_key):
 
 def getPendingBalance(public_key):
     balance = 0
+    transactions = findTransactions()
     for transaction in transactions:
         print(transaction)
         if (transaction.reciever == public_key):
@@ -62,8 +69,12 @@ def hasSufficentFunds(public_key, amount):
     return False
 
 @app.route('/')
-def frontend():
+def indexRoute():
     return render_template("index.html")
+    
+@app.route('/transactions')
+def transactionsRoute():
+    return render_template("transactions.html")
 
 @app.route('/<path:path>')
 def send_js(path):
@@ -89,6 +100,7 @@ def mine():
     global db
 
     previousBlock = getBlockchain()[-1]
+    transactions = findTransactions()
 
     req = request.get_json()
     block = Block(req["index"], req["transactions"], req["nonce"], previousBlock.hash, req["hash"])
@@ -104,6 +116,7 @@ def mine():
             for trans in transactions:
                 if trans.signature == transactionObject.signature:
                     print(trans.signature)
+                    db.transactions.delete_one({ "signature": transactionObject.signature })
                     transactions.remove(trans)
                     break
             else:
@@ -138,11 +151,12 @@ def createTransaction():
     if not hasSufficentFunds(transactionObject.sender, transactionObject.amount):
         return jsonify({"error": "Insufficient Balance"}), 400
 
-    transactions.append(transactionObject)
+    db.transactions.insert_one(transactionObject.__dict__)
     return jsonify({"response": "Transaction Posted"})
 
 @app.route("/api/transactions", methods=['GET'])
 def getTransactions():
+    transactions = findTransactions()
     return jsonify(transactions)
 
 if __name__ == '__main__':

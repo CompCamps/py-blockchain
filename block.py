@@ -37,10 +37,10 @@ class Block:
     def validate(self):
         if (self.hash != self.hashBlock()):
             return False
-        # if (self.hash[:4] != "0000"):
-        #      return False
-        if (self.hash[:5] != "decaf"):
-            return False
+        if (self.hash[:4] != "0000"):
+             return False
+        # if (self.hash[:5] != "decaf"):
+        #     return False
         return True
 
 # Creates the first block with arbitrary hash
