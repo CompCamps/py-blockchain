@@ -39,6 +39,7 @@ class Block:
             return False
         # if (self.hash[:4] != "0000"):
         #      return False
+        print(prefix)
         if (self.hash[:len(prefix)] != prefix):
             return False
         return True
