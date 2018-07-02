@@ -1,5 +1,5 @@
 import datetime as date
-import requests as requests
+import requests
 from block import *
 from transaction import *
 import simplejson as json
@@ -8,22 +8,25 @@ from lib.keys import getEncodedKeys
 import os
 import time
 import urllib.parse
+from lib.prefix import Prefix
 
 public_key, _ = getEncodedKeys()
 server = "https://campcoin.herokuapp.com"
+prefix = Prefix()
 
 def mineCycle():
+    prefix.fetch()
     try:
         while True:
             newBlock = mine(getCurrentBlock(), getCurrentTransactions())
             submitNewBlock(newBlock)
     except KeyboardInterrupt:
         pass
-    
 
 def mineDebug(previousBlock, transactions):
     os.system('clear')
     print("Status: Currently mining")
+    print("Current prefix: " + prefix.get())
     print("Press ctrl+C to return to menu.. ")
     print("")
     print("Previous block: ")
@@ -37,7 +40,7 @@ def mine(previousBlock, transactions):
     mineDebug(previousBlock, transactions)
 
     beginTimestamp = date.datetime.now()
-    while (not newBlock.validate()):
+    while (not newBlock.validate(prefix.get())):
         nonce = random.randint(1, 100000000000)
         newBlock = nextBlock(previousBlock, json.dumps(transactions), nonce)
 
@@ -45,6 +48,7 @@ def mine(previousBlock, transactions):
             beginTimestamp = date.datetime.now()
             previousBlock = getCurrentBlock()
             transactions = getCurrentTransactions()
+            prefix.fetch()
             mineDebug(previousBlock, transactions)
     return newBlock
 

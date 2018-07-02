@@ -19,6 +19,7 @@ client = MongoClient(os.getenv("MONGO_URL"),
                       authMechanism='SCRAM-SHA-1')
 
 db = client.campcoin
+prefix = "decaf00"
 
 #genesis block
 #db.blocks.insert_one(createGenesisBlock().__dict__)
@@ -99,6 +100,10 @@ def current():
     blockchain = getBlockchain()
     return jsonify(blockchain[-1])
 
+@app.route("/api/prefix")
+def getPrefix():
+    return prefix
+
 @app.route("/api/mine", methods=['POST'])
 def mine():
     global db
@@ -108,7 +113,7 @@ def mine():
 
     req = request.get_json()
     block = Block(req["index"], req["transactions"], req["nonce"], previousBlock.hash, req["hash"])
-    if not block.validate():
+    if not block.validate(prefix):
         return jsonify({"error": "Invalid hash"}), 400
 
     transactionStringArr = []

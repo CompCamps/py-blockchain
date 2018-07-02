@@ -34,12 +34,12 @@ class Block:
         print("Previous Hash: " + self.previousHash)
         print("")
     
-    def validate(self):
+    def validate(self, prefix):
         if (self.hash != self.hashBlock()):
             return False
         # if (self.hash[:4] != "0000"):
         #      return False
-        if (self.hash[:6] != "decaf0"):
+        if (self.hash[:len(prefix)] != prefix):
             return False
         return True
 
