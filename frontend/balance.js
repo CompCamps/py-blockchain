@@ -11,16 +11,13 @@ class Balance extends React.Component {
   handleChange(event) {
     this.setState({publicKey: event.target.value});
   }
+  encodeURL(str){
+    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+  }
   onSubmit() {
     //this.setState({loading: true});
-    fetch('https://campcoin.herokuapp.com/api/balance', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'post',
-      body: JSON.stringify({"public_key": this.state.publicKey})
-    }).then(response => {
+    fetch('/api/balance?public_key=' + encodeURIComponent(this.state.publicKey))
+    .then(response => {
       return response.json();
     })
     .then(myJson => {

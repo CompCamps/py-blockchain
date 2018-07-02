@@ -7,9 +7,10 @@ import random
 from lib.keys import getEncodedKeys
 import os
 import time
+import urllib.parse
 
 public_key, _ = getEncodedKeys()
-server = "https://campcoin.herokuapp.com"
+server = "http://localhost:5000"#https://campcoin.herokuapp.com"
 
 def mineCycle():
     try:
@@ -84,8 +85,8 @@ def sendCoins():
 
 
 def checkBalance():
-    balanceObject = {"public_key": public_key}
-    req = requests.post(server + '/api/balance', json=balanceObject)
+    key = {'public_key': public_key}
+    req = requests.get(server + '/api/balance?' + urllib.parse.urlencode(key))
     os.system('clear')
     print("Your public key is: " + public_key)
     print("Your balance is: " + req.text)

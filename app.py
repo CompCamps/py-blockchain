@@ -84,10 +84,11 @@ def balanceRoute():
 def send_js(path):
     return send_from_directory('frontend', path)
 
-@app.route('/api/balance', methods=["POST"])
+@app.route('/api/balance')
 def balance():
-    req = request.get_json()
-    return str(getBalance(req["public_key"]))
+    key = request.args.get('public_key')
+    print(key)
+    return str(getBalance(key))
 
 @app.route('/api/chain')
 def chain():
