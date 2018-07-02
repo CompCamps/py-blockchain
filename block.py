@@ -39,7 +39,7 @@ class Block:
             return False
         # if (self.hash[:4] != "0000"):
         #      return False
-        if (self.hash[:5] != "decaf"):
+        if (self.hash[:6] != "decaf0"):
             return False
         return True
 
