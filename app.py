@@ -76,6 +76,10 @@ def indexRoute():
 def transactionsRoute():
     return render_template("transactions.html")
 
+@app.route('/balance')
+def balanceRoute():
+    return render_template("balance.html")
+
 @app.route('/<path:path>')
 def send_js(path):
     return send_from_directory('frontend', path)

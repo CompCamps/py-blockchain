@@ -9,7 +9,7 @@ import os
 import time
 
 public_key, _ = getEncodedKeys()
-server = "http://localhost:5000"#https://campcoin.herokuapp.com"
+server = "https://campcoin.herokuapp.com"
 
 def mineCycle():
     try:
