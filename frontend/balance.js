@@ -13,7 +13,7 @@ class Balance extends React.Component {
   }
   onSubmit() {
     //this.setState({loading: true});
-    fetch('/api/balance', {
+    fetch('https://campcoin.herokuapp.com/api/balance', {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
