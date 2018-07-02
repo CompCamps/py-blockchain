@@ -54,7 +54,6 @@ def getPendingBalance(public_key):
     balance = 0
     transactions = findTransactions()
     for transaction in transactions:
-        print(transaction)
         if (transaction.reciever == public_key):
                 balance = balance + transaction.amount
         if (transaction.sender == public_key):
@@ -87,8 +86,8 @@ def send_js(path):
 @app.route('/api/balance')
 def balance():
     key = request.args.get('public_key')
-    print(key)
-    return str(getBalance(key))
+    balance = getBalance(key) + getPendingBalance(key)
+    return str(balance)
 
 @app.route('/api/chain')
 def chain():
@@ -120,7 +119,6 @@ def mine():
                 return jsonify({"error": "Bad Transaction in block"}), 400
             for trans in transactions:
                 if trans.signature == transactionObject.signature:
-                    print(trans.signature)
                     db.transactions.delete_one({ "signature": transactionObject.signature })
                     transactions.remove(trans)
                     break
