@@ -3,19 +3,17 @@ import hashlib as hashlib
 class Block:
     def __init__(self, index, nonce, data, previousHash, hash=None):
         self.index = index
-
-        # TODO: Add the pieces of a block
-        # TODO: 'self.hash' should be a the SHA256 of the block
-
+        self.nonce = nonce
+        self.data = data
+        self.previousHash = previousHash
+        self.hash = self.hashBlock()
 
     # Takes all the block fields and combines them into one big string
     # then hashes that string
     def hashBlock(self):
         hash = hashlib.sha256((
             str(self.index) +
-
-            # TODO: Include the nonce in the hash calculation
-            
+            str(self.nonce) +
             str(self.data) + 
             str(self.previousHash)).encode('utf-8')).hexdigest()
         return hash
@@ -25,3 +23,7 @@ class Block:
         if self.hash[:3] != "000":
             return False
         return True
+
+    # TODO: Create a print statement to display the block nicely
+    def print(self):
+        return

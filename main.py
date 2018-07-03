@@ -7,4 +7,4 @@ while not block.validate():
     nonce = nonce + 1
     block = Block(0, nonce, "hello world", 0)
 
-print(str(block.hash))
+block.print()
