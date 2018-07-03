@@ -158,6 +158,9 @@ def createTransaction():
 
     if not hasSufficentFunds(transactionObject.sender, transactionObject.amount):
         return jsonify({"error": "Insufficient Balance"}), 400
+    
+    if transactionObject.sender == transactionObject.reciever:
+        return jsonify({"error": "You cannot send yourself coins!"}), 400
 
     db.transactions.insert_one(transactionObject.__dict__)
     return jsonify({"response": "Transaction Posted"})
