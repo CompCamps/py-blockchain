@@ -1,7 +1,0 @@
-simplejson
-ecdsa
-flask
-python-dotenv
-pymongo
-requests
-gunicorn
