@@ -1,10 +1,10 @@
-import hashlib as hashlib
+from block import Block
 
-# TODO: modify toHash so hash starts with 0
-toHash = "hello world"
+nonce = 0
+block = Block(0, nonce, "hello world", 0)
 
-hash = hashlib.sha256(toHash.encode('utf-8')).hexdigest()
+while not block.validate():
+    nonce = nonce + 1
+    block = Block(0, nonce, "hello world", 0)
 
-# Hint: use a while loop
-
-print(hash)
+print(str(block.hash))
