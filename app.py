@@ -163,8 +163,9 @@ def createTransaction():
     return jsonify({"response": "Transaction Posted"})
 
 @app.route("/api/transactions", methods=['GET'])
-def getTransactions():
-    transactions = findTransactions()
+def getTransactionsToMine():
+    # Get up to two transactions per block
+    transactions = findTransactions()[0:2]
     return jsonify(transactions)
 
 @app.route('/api/balances')
@@ -187,7 +188,12 @@ def getAllBalances():
     del balances["123"] # test key
     return jsonify(balances)
 
-@app.route('/api/transactions')
+@app.route("/api/transactions/pending")
+def getPendingTransactions():
+    transactions = findTransactions()
+    return jsonify(transactions)
+
+@app.route('/api/transactions/mined')
 def getAllTransactions():
     transactions = []
     blockchain = getBlockchain()
