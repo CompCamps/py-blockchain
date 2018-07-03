@@ -6,7 +6,11 @@ class Block:
         self.nonce = nonce
         self.data = data
         self.previousHash = previousHash
-        self.hash = self.hashBlock()
+        # TODO: Add an if statement to set hash if one is given through the hash parameter
+        if hash:
+            self.hash = hash
+        else:
+            self.hash = self.hashBlock()
 
     # Takes all the block fields and combines them into one big string
     # then hashes that string
@@ -18,6 +22,7 @@ class Block:
             str(self.previousHash)).encode('utf-8')).hexdigest()
         return hash
 
+    # TODO: Modify your validate function to match the CampCoin prefix
     # Checks if the block hash begins with a desired value (000)
     def validate(self):
         if self.hash[:3] != "000":
