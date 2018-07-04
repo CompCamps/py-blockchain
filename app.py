@@ -185,7 +185,6 @@ def createTransaction():
 def getTransactionsToMine():
     # Get up to two transactions per block
     transactions = findTransactions()[0:2]
-    print(len(str(transactions[0].__dict__)))
     return jsonify(transactions)
 
 @app.route('/api/balances')

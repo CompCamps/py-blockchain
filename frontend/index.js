@@ -37,7 +37,9 @@ class BlockChain extends React.Component {
   constructor() {
     super()
     this.state = {
-      blocks: []
+      blockGroups: [],
+      show: 0,
+      chunkCount: 0
     }
   }
   componentDidMount() {
@@ -47,17 +49,33 @@ class BlockChain extends React.Component {
       })
       .then(myJson => {
         this.setState((prevState, props) => {
-          return {blocks: myJson};
+          var chunkCount = Math.round(myJson.length/500);
+          var chunkSize = Math.round(myJson.length/chunkCount/500) * 500;
+          myJson = myJson.reverse()
+          var groups = myJson.map( function(e,i){ 
+              return i%chunkSize===0 ? myJson.slice(i,i+chunkSize) : null; 
+          }).filter(function(e){ return e; });
+          return {blockGroups: groups, chunkCount: chunkCount};
         });
     });
+  }
+
+  showMore() {
+    this.setState({show: this.state.show + 1})
   }
 // Use the render function to return JSX component      
 render() { 
     return (
     <div class="row">
-      {this.state.blocks.length == 0 ? 
+      {this.state.blockGroups.length == 0 ? 
       <div class="loader"></div> :
-      this.state.blocks.reverse().map(block=> <Block block={block} transactions={JSON.parse(block.transactions)}></Block>)}
+      this.state.blockGroups.map((group, index) =>
+        index <= this.state.show ? group.map(block=> <Block block={block} transactions={JSON.parse(block.transactions)}></Block>) : ''
+      )}
+      {this.state.blockGroups.length > 0 && this.state.show < this.state.chunkCount-1 ? 
+      <div class="col-12 text-center mb-3">
+        <button class="btn btn-link" onClick={this.showMore.bind(this)}>Show More</button>
+      </div> : ''}
     </div>
   );
   } 
