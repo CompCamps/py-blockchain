@@ -1,42 +1,53 @@
 import hashlib as hashlib
+import datetime as date
 
+# Block object
 class Block:
-    def __init__(self, index, nonce, data, previousHash, hash=None):
+    # Constructor
+    def __init__(self, index, transactions, nonce, previousHash, hash=None, timestamp=None):
         self.index = index
+        self.transactions = transactions
         self.nonce = nonce
-        self.data = data
         self.previousHash = previousHash
-        # TODO: Add an if statement to set hash if one is given through the hash parameter
         if hash:
             self.hash = hash
         else:
             self.hash = self.hashBlock()
+        self.timestamp = timestamp
 
-    # Takes all the block fields and combines them into one big string
-    # then hashes that string
+    def _asdict(self):
+        return self.__dict__
+  
+    # Generate the hash for the new block
     def hashBlock(self):
         hash = hashlib.sha256((
-            str(self.index) +
-            str(self.nonce) +
-            str(self.data) + 
-            str(self.previousHash)).encode('utf-8')).hexdigest()
-        return hash
+                str(self.transactions) + 
+                str(self.nonce) +
+                str(self.previousHash)).encode('utf-8'))
+        return hash.hexdigest()
 
-    # TODO: Modify your validate function to match the CampCoin prefix
-    # Checks if the block hash begins with a desired value (000)
-    def validate(self):
-        if self.hash[:3] != "000":
+    # Prints out information about the block
+    def display(self):
+        print("Block #: " + str(self.index))
+        print("transactions: " + self.transactions)
+        print("Nonce: " + str(self.nonce))
+        print("Hash: " + self.hash)
+        print("Previous Hash: " + self.previousHash)
+        print("")
+    
+    def validate(self, prefix):
+        if (self.hash != self.hashBlock()):
+            return False
+        # if (self.hash[:4] != "0000"):
+        #      return False
+        if (self.hash[:len(prefix)] != prefix):
             return False
         return True
 
-    # Prints the block to the screen
-    def print(self):
-        print("Block #: " + str(self.index))
-        print("Nonce: " + str(self.nonce))
-        print("Data: " + str(self.data))
-        print("Previous Hash: " + str(self.previousHash))
-        print("Hash: " + str(self.hash))
+# Creates the first block with arbitrary hash
+def createGenesisBlock():
+  return Block(0, "[]", 0, "0")
 
-    # Returns the block that comes after this block
-    def nextBlock(self, nonce, data):
-        return Block(self.index + 1, nonce, data, self.hash)
+def nextBlock(lastBlock, transactions, nonce):
+    index = lastBlock.index + 1
+    return Block(index, transactions, nonce, lastBlock.hash)
