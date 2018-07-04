@@ -79,7 +79,7 @@ def sendCoins():
     os.system('clear')
     reciever = input("Enter address to send coins to: ")
     amount = input("Enter amount to send: ")
-    res = postTransaction(reciever, int(amount))
+    res = postTransaction(reciever, float(amount))
     if res.status_code == 200:
         print("Transaction successfully sent!")
     else:

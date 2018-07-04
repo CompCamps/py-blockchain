@@ -52,7 +52,8 @@ class BlocksPerHourContainer extends React.Component {
     constructor() {
         super()
         this.state = {
-            days: []
+            days: [],
+            totalBlocks: 0
         }
     }
     componentDidMount() {
@@ -61,6 +62,7 @@ class BlocksPerHourContainer extends React.Component {
             return response.json();
         })
         .then(myJson => {
+            var totalBlocks = 0
             Object.keys(myJson).forEach((day) => {
                 var data = []
                 var total = 0
@@ -68,15 +70,19 @@ class BlocksPerHourContainer extends React.Component {
                     data.push({label: key, bph: myJson[day][key]})
                     total += myJson[day][key]
                 });
+                totalBlocks += total
                 data.sort((a,b) => a.label - b.label)
                 this.setState((prev, next) => prev.days.push({num: day, data: data, total: total}))
+                this.setState({totalBlocks: totalBlocks})
             })
         });
     }
 
     render() {
+        var cad = Math.round(1/(0.025*this.state.totalBlocks) * 1000) / 1000;
         return (
             <div id="stats">
+            <h2 class="mb-4">Blocks Mined {this.state.days.length > 0 ? <span class="right"> Estimated Value: ${cad} CAD</span> : ''}</h2>
                 <div class="row">
                 {this.state.days.length === 0 ?
                         <div id="loader" class="loader"></div> :
@@ -98,7 +104,6 @@ class BlocksPerHourContainer extends React.Component {
   function App() {
     return(
     <div class="container-fluid">
-        <h2 class="mb-4">Blocks Mined</h2>
         <BlocksPerHourContainer />
     </div>
     )
