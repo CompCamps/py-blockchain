@@ -1,5 +1,9 @@
 from block import Block
-import requests
+import campcoin_api as campcoin
+
+campcoin = campcoin.CampCoin("https://campcoin.herokuapp.com")
+
+print(campcoin.getCurrentBlock())
 
 blockchain = []
 
