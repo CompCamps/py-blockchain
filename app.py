@@ -19,7 +19,7 @@ client = MongoClient(os.getenv("MONGO_URL"),
                       authMechanism='SCRAM-SHA-1')
 
 db = client.campcoin
-prefix = "decaf0"
+prefix = "decaf00"
 
 #genesis block
 #db.blocks.insert_one(createGenesisBlock().__dict__)
