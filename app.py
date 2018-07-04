@@ -105,7 +105,7 @@ def send_js(path):
 @app.route('/api/balance')
 def balance():
     key = request.args.get('public_key')
-    balance = getBalance(key) + subtractPendingBalance(key)
+    balance = getBalance(key) + getPendingBalance(key)
     return str(balance)
 
 @app.route('/api/chain')
