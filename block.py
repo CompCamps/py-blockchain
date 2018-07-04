@@ -4,7 +4,7 @@ import datetime as date
 # Block object
 class Block:
     # Constructor
-    def __init__(self, index, transactions, nonce, previousHash, hash=None):
+    def __init__(self, index, transactions, nonce, previousHash, hash=None, timestamp=None):
         self.index = index
         self.transactions = transactions
         self.nonce = nonce
@@ -13,6 +13,7 @@ class Block:
             self.hash = hash
         else:
             self.hash = self.hashBlock()
+        self.timestamp = timestamp
 
     def _asdict(self):
         return self.__dict__

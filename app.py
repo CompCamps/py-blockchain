@@ -2,6 +2,8 @@ import hashlib as hasher
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from pymongo import MongoClient
 import simplejson as json
+import time
+import datetime
 
 from block import *
 from transaction import Transaction
@@ -24,18 +26,24 @@ prefix = "decaf00"
 #genesis block
 #db.blocks.insert_one(createGenesisBlock().__dict__)
 
+def utc_to_local(dt):
+    if time.localtime().tm_isdst:
+        return dt - datetime.timedelta(seconds = time.altzone)
+    else:
+        return dt - datetime.timedelta(seconds = time.timezone)
+
 def getBlockchain():
     blockchain = []
     blocks = db.blocks.find()
     for block in blocks:
-        b = Block(block['index'], block['transactions'], block['nonce'], block['previousHash'], block['hash'])
+        b = Block(block['index'], block['transactions'], block['nonce'], block['previousHash'], block['hash'], utc_to_local(block['_id'].generation_time))
         blockchain.append(b)
     return blockchain
     
 def findTransactions():
     transactions = []
     for transaction in db.transactions.find():
-        t = Transaction(transaction['sender'], transaction['reciever'], transaction['amount'], transaction['signature'])
+        t = Transaction(transaction['sender'], transaction['reciever'], transaction['amount'], transaction['signature'], utc_to_local(transaction['_id'].generation_time))
         transactions.append(t)
     return transactions
 
@@ -204,7 +212,7 @@ def getAllTransactions():
     for block in blockchain:
         for transaction in json.loads(block.transactions):
             if (transaction['sender'] != "MINER"):
-                trans = Transaction(transaction['sender'], transaction['reciever'], transaction['amount'], transaction['signature'])
+                trans = Transaction(transaction['sender'], transaction['reciever'], transaction['amount'], transaction['signature'], block.timestamp)
                 transactions.append(trans)
 
     return jsonify(transactions)

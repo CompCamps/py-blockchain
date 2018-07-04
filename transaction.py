@@ -2,7 +2,7 @@ from lib.keys import signData, verifyData
 import base64
 
 class Transaction:
-    def __init__(self, sender, reciever, amount, signature=None):
+    def __init__(self, sender, reciever, amount, signature=None, timestamp=None):
         self.sender = sender
         self.reciever = reciever
         self.amount = amount
@@ -10,6 +10,7 @@ class Transaction:
             self.signature = self.signTransaction()
         else:
             self.signature = signature
+        self.timestamp = timestamp
 
     def signTransaction(self):
         signature = signData(str(self.sender) + str(self.reciever) + str(self.amount))

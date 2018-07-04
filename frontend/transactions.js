@@ -5,6 +5,8 @@ class Transaction extends React.Component {
        <div class="card block">
         <div class="card-body">
           <p class="text-center transaction">
+            <span class="text-small">{this.props.transaction.timestamp}</span>
+            <hr/>
             <div class="hash">{this.props.transaction.sender}</div>
             <div class="text-info arrow">⇓ ¢{this.props.transaction.amount}</div>
             <div class="hash">{this.props.transaction.reciever}</div>
