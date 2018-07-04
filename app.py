@@ -56,12 +56,21 @@ def getBalance(public_key):
 
     return balance
 
+def subtractPendingBalance(public_key):
+    balance = 0
+    transactions = findTransactions()
+    for transaction in transactions:
+        if (transaction.sender == public_key):
+            balance = balance - transaction.amount
+
+    return balance
+
 def getPendingBalance(public_key):
     balance = 0
     transactions = findTransactions()
     for transaction in transactions:
         if (transaction.reciever == public_key):
-                balance = balance + transaction.amount
+            balance = balance + transaction.amount
         if (transaction.sender == public_key):
             balance = balance - transaction.amount
 
@@ -96,7 +105,7 @@ def send_js(path):
 @app.route('/api/balance')
 def balance():
     key = request.args.get('public_key')
-    balance = getBalance(key) + getPendingBalance(key)
+    balance = getBalance(key) + subtractPendingBalance(key)
     return str(balance)
 
 @app.route('/api/chain')
