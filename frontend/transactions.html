@@ -51,26 +51,33 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg">
-            <div class="navbar-brand" style="margin-right: 10px;"><img src="./logo-sm.png" height="50px"/></div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Blockchain</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/transactions">Transactions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/balance">Balance Checker</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/miner.exe">Download Miner</a>
-                    </li>
-                </ul>
-        </nav>
-        <div id="root"></div>
-        <script type="text/babel" src="./transactions.js"></script>
+                <div class="navbar-brand"><img src="./logo-sm.png" height="50px"/></div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Blockchain</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/transactions">Transactions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/balance">Balances</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/miner.exe">Download Miner</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/CompCamps/py-blockchain">Source Code</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="root"></div>
+            <script type="text/babel" src="./transactions.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     </body>
 </html>

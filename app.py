@@ -27,10 +27,7 @@ prefix = "decaf00"
 #db.blocks.insert_one(createGenesisBlock().__dict__)
 
 def utc_to_local(dt):
-    if time.localtime().tm_isdst:
-        return dt - datetime.timedelta(seconds = time.altzone)
-    else:
-        return dt - datetime.timedelta(seconds = time.timezone)
+    return dt - datetime.timedelta(seconds = 21600)
 
 def getBlockchain():
     blockchain = []
