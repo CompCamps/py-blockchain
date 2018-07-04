@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="CampCoin",
-    version="0.0.5",
+    version="0.0.6",
     author="Taylor Petrychyn",
     author_email="compcamps@gmail.com",
     description="A Computer Camp Cryptocurrency",

@@ -79,7 +79,7 @@ class BlocksPerHourContainer extends React.Component {
     }
 
     render() {
-        var cad = Math.round(1/(0.025*this.state.totalBlocks) * 1000) / 1000;
+        var cad = 10 * Math.round(1/(0.025*this.state.totalBlocks) * 1000) / 1000;
         return (
             <div id="stats">
             <h2 class="mb-4">Blocks Mined {this.state.days.length > 0 ? <span class="right d-none d-sm-inline small">Estimated Value: ${cad} CAD</span> : ''}</h2>
