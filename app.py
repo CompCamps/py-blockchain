@@ -175,6 +175,9 @@ def createTransaction():
     if transactionObject.amount <= 0:
         return jsonify({"error": "Must send at least 1 coin"}), 400
 
+    if (len(str(transactionObject.__dict__)) > 500):
+        return jsonify({"error": "Transaction Object exceeds maximum bytes"}), 400 
+
     db.transactions.insert_one(transactionObject.__dict__)
     return jsonify({"response": "Transaction Posted"})
 
@@ -182,6 +185,7 @@ def createTransaction():
 def getTransactionsToMine():
     # Get up to two transactions per block
     transactions = findTransactions()[0:2]
+    print(len(str(transactions[0].__dict__)))
     return jsonify(transactions)
 
 @app.route('/api/balances')
