@@ -172,6 +172,9 @@ def createTransaction():
     if transactionObject.sender == transactionObject.reciever:
         return jsonify({"error": "You cannot send yourself coins!"}), 400
 
+    if transactionObject.amount <= 0:
+        return jsonify({"error": "Must send at least 1 coin"}), 400
+
     db.transactions.insert_one(transactionObject.__dict__)
     return jsonify({"response": "Transaction Posted"})
 
