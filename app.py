@@ -153,6 +153,7 @@ def mine():
 def createTransaction():
     req = request.get_json()
     transactionObject = Transaction(req["sender"], req["reciever"], req["amount"], req["signature"])
+
     if not transactionObject.verifyTransaction(transactionObject.sender):
         return jsonify({"error": "Bad Transaction"}), 400
 

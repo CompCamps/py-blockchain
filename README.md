@@ -1,4 +1,4 @@
-# py-blockchain
+# Campcoin
 A blockchain in Python
 
 ## Installation
