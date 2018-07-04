@@ -35,7 +35,7 @@ class BalanceList extends React.Component {
           <div class="loader"></div> :
           <ul class="list-group col-8 offset-2">
           {this.state.balances.map(function(bal) {  
-            return (<li class="list-group-item"><span class="hash">{bal.key}</span> <span class="balance right text-info">¢{bal.balance}</span></li>)
+            return (<li class="list-group-item"><span class="hash">{bal.key}</span> <span class="balance right text-info">¢{Math.round(bal.balance * 1000)/1000}</span></li>)
           })}
           </ul>
         }

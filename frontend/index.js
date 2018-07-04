@@ -3,7 +3,7 @@ class Transaction extends React.Component {
     return (
       <p class="text-center transaction">
         <div class="hash">{this.props.transaction.sender}</div>
-        <div class="text-info arrow">⇓ ¢{this.props.transaction.amount}</div>
+        <div class="text-info arrow">⇓ ¢{Math.round(this.props.transaction.amount * 1000)/1000}</div>
         <div class="hash">{this.props.transaction.reciever}</div>
       </p>
       

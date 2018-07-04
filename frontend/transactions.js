@@ -8,7 +8,7 @@ class Transaction extends React.Component {
             <span class="text-small">{this.props.transaction.timestamp}</span>
             <hr/>
             <div class="hash">{this.props.transaction.sender}</div>
-            <div class="text-info arrow">⇓ ¢{this.props.transaction.amount}</div>
+            <div class="text-info arrow">⇓ ¢{Math.round(this.props.transaction.amount * 1000)/1000}</div>
             <div class="hash">{this.props.transaction.reciever}</div>
             <hr/>
             Signature: <div class="hash">{this.props.transaction.signature}</div>
