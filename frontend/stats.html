@@ -1,0 +1,174 @@
+<html>
+    <head>
+        <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.min.css"></link>
+        <style>
+            .loader {
+                margin: 0 auto;
+                margin-top: 5em;
+                border: 16px solid #073642; /* Light grey */
+                border-top: 16px solid #2AA198; /* Blue */
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>     
+
+        <title>CC Coin</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg">
+            <div class="navbar-brand"><img src="./logo-sm.png" height="50px"/></div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Blockchain</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/transactions">Transactions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/balance">Balances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stats">Stats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/miner.exe">Download Miner</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/CompCamps/py-blockchain">Source Code</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <h2 class="mb-4">Blocks Mined Per Hour</h2>
+            <div id="loader" class="loader"></div>
+            <div id="stats" class="row mb-3" style="display: none;">
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h3>Day One - <span id="total"></span> Blocks</h3>
+                        <canvas id="chartOne"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h3>Day Two - <span id="total2"></span> Blocks</h3>
+                        <canvas id="chartTwo"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+        var ctx = document.getElementById("chartOne").getContext('2d');
+        var ctx2 = document.getElementById("chartTwo").getContext('2d');
+
+        var labels = []
+        var cph = []
+        var total = 0
+
+        var labels2 = []
+        var cph2 = []
+        var total2 = 0
+        fetch('/api/stats/blocksPerHour')
+            .then(response => {
+                return response.json();
+            })
+            .then(myJson => {
+                Object.keys(myJson['02']).forEach((key, value) => {
+                    labels.push(key)
+                    cph.push(myJson['02'][key])
+                    total += myJson['02'][key]
+                });
+                Object.keys(myJson['03']).forEach((key, value) => {
+                    labels2.push(key)
+                    cph2.push(myJson['03'][key])
+                    total2 += myJson['03'][key]
+                });
+            $("#loader").hide()
+            $('#stats').show()
+            $('#total').text(total)
+            $('#total2').text(total2)
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '# of Blocks',
+                        data: cph,
+                        backgroundColor: 
+                           'rgba(42, 161, 152, 0.4)'
+                        ,
+                        borderColor: 
+                            'rgba(42, 161, 152, 1)'
+                        ,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Hour'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            var myChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: labels2.sort(),
+                    datasets: [{
+                        label: '# of Blocks',
+                        data: cph2.sort(),
+                        backgroundColor: 
+                           'rgba(42, 161, 152, 0.4)'
+                        ,
+                        borderColor: 
+                            'rgba(42, 161, 152, 1)'
+                        ,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Hour'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+        </script>
+        <script type="text/babel" src="./index.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    </body>
+</html>

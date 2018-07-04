@@ -76,6 +76,10 @@ def hasSufficentFunds(public_key, amount):
 @app.route('/')
 def indexRoute():
     return render_template("index.html")
+
+@app.route('/stats')
+def statsRoute():
+    return render_template("stats.html")
     
 @app.route('/transactions')
 def transactionsRoute():
@@ -213,6 +217,24 @@ def getAllTransactions():
                 transactions.append(trans)
 
     return jsonify(transactions)
+
+@app.route('/api/stats/blocksPerHour')
+def getBlocksPerHour():
+    blockchain = getBlockchain()
+    stats = {}
+    for block in blockchain:
+        day = block.timestamp.strftime('%d')
+        hour = block.timestamp.strftime('%H')
+        try:
+            stats[day][hour] = stats[day][hour] + 1
+        except:
+            try:
+                stats[day][hour] = 1
+            except:
+                stats[day] = {}
+                stats[day][hour] = 1
+    del stats['30']
+    return jsonify(stats)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
