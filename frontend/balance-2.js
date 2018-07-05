@@ -59,7 +59,8 @@ class Balance extends React.Component {
   encodeURL(str){
     return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
   }
-  onSubmit() {
+  onSubmit(e) {
+    e.preventDefault();
     if (this.state.publicKey.length === 0) return
     fetch('/api/balance?public_key=' + encodeURIComponent(this.state.publicKey))
     .then(response => {
