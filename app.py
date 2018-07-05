@@ -1,12 +1,19 @@
 import hashlib as hasher
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, send_file
 from pymongo import MongoClient
 import simplejson as json
+import png
 import time
 import datetime
 
 from block import *
 from transaction import Transaction
+
+# Imports for Image manip
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw 
+import io
 
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -105,8 +112,24 @@ def send_js(path):
 @app.route('/api/balance')
 def balance():
     key = request.args.get('public_key')
+    image = request.args.get('image')
     balance = getBalance(key) + getPendingBalance(key)
-    return str(balance)
+    if not image:
+        return str(balance)
+    else:
+        return drawBalance(balance)
+
+def drawBalance(balance):
+    img = Image.open("template.png")
+    img_io = io.BytesIO()
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype("SourceSansPro-Regular.otf", 200)
+    bLength = len(str(int(balance)))
+    draw.text((550-bLength*55, 50),str(int(balance)),(255,255,255),font=font)
+    img.save(img_io, 'png', quality=100)
+    img_io.seek(0)
+
+    return send_file(img_io, mimetype='image/png')
 
 @app.route('/api/chain')
 def chain():
