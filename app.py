@@ -2,7 +2,6 @@ import hashlib as hasher
 from flask import Flask, request, jsonify, render_template, send_from_directory, send_file
 from pymongo import MongoClient
 import simplejson as json
-import png
 import time
 import datetime
 
