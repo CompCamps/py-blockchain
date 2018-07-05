@@ -26,7 +26,7 @@ client = MongoClient(os.getenv("MONGO_URL"),
                       authSource=os.getenv("MONGO_AUTHSOURCE"),
                       authMechanism='SCRAM-SHA-1')
 
-db = client.campcoin
+db = client['campcoin-test']
 prefix = "decaf0"
 
 #genesis block

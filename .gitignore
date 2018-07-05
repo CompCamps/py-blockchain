@@ -2,7 +2,6 @@ config.ini
 __pycache__/
 *.pem
 *.pyc
-.env
 *.egg-info
 dist/
 build/
