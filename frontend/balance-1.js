@@ -60,7 +60,7 @@ class Balance extends React.Component {
     return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
   }
   onSubmit() {
-    //this.setState({loading: true});
+    if (this.state.publicKey.length === 0) return
     fetch('/api/balance?public_key=' + encodeURIComponent(this.state.publicKey))
     .then(response => {
       return response.json();
@@ -71,21 +71,27 @@ class Balance extends React.Component {
       });
     });
   }
+  onBalanceImage(e) {
+    if (this.state.publicKey.length === 0) return
+    window.location.href = '/api/balance?image=true&public_key=' + encodeURIComponent(this.state.publicKey)
+    e.preventDefault();
+  }
 // Use the render function to return JSX component      
 render() { 
     return (
     <div class="row">
       {this.state.loading ? 
       <div class="loader"></div> : ''}
-      <div class="col-8 offset-2">
+      <form class="col-8 offset-2">
         <div class="form-group">
           <label for="publicKey">Public Key</label>
-          <input class="form-control" id="publicKey" type="text" value={this.state.publicKey} onChange={this.handleChange.bind(this)}/>
+          <input class="form-control" id="publicKey" type="text" value={this.state.publicKey} onChange={this.handleChange.bind(this)} placeholder="Enter a public key" required/>
         </div>
         <div class="form-group">
-        <button class="w-50 btn btn-info right" onClick={this.onSubmit.bind(this)}>Submit</button>
+        <button class="w-25 btn btn-info right" onClick={this.onSubmit.bind(this)}>Get Balance</button>
+        <button class="w-25 btn btn-secondary right mr-2" onClick={this.onBalanceImage.bind(this)} type="submit">Generate Image</button>
         </div>
-      </div>
+      </form>
       
       <div class="col-8 offset-2">
       <h3>Balance: {this.state.balance}</h3>
