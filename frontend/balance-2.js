@@ -73,7 +73,7 @@ class Balance extends React.Component {
   }
   onBalanceImage(e) {
     if (this.state.publicKey.length === 0) return
-    window.location.href = '/api/balance?image=true&public_key=' + encodeURIComponent(this.state.publicKey)
+    window.location.href = 'https://campcoin.herokuapp.com/api/balance?image=true&public_key=' + encodeURIComponent(this.state.publicKey)
     e.preventDefault();
   }
 // Use the render function to return JSX component      
